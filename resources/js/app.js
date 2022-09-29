@@ -4,9 +4,12 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import './bootstrap';
+// import './bootstrap';
+// import '../sass/app.scss'
 import { createApp } from 'vue';
+import router from "./router";
 
+import store from './store'
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
  * registering components with the application instance so they are ready
@@ -36,4 +39,9 @@ app.component('example-component', ExampleComponent);
  * scaffolding. Otherwise, you will need to add an element yourself.
  */
 
-app.mount('#app');
+import vuetify from './plugins/vuetify'
+import { loadFonts } from './plugins/webfontloader'
+
+loadFonts()
+
+app.use(vuetify).use(router).use(store).mount('#app');
