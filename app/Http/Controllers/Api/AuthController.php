@@ -18,17 +18,6 @@ class AuthController extends Controller
 
         $passwordGrantClient = Client::where('password_client', 1)->first();
 
-//        $response = Http::asForm()->post(route('passport.token'), [
-//            'grant_type' => 'password',
-//            'client_id' => $passwordGrantClient->id,
-//            'client_secret' => $passwordGrantClient->secret,
-//            'username' => $request->email,
-//            'password' => $request->password,
-//            'scope' => ''
-//        ]);
-
-//        return $response->json();
-//
         $data = [
             'grant_type' => 'password',
             'client_id' => $passwordGrantClient->id,
@@ -37,11 +26,20 @@ class AuthController extends Controller
             'password' => $request->password,
             'scope' => '*'
         ];
-//
-        $tokenRequest = Request::create('/oauth/token',  'post', $data);
-//
-        return app()->handle($tokenRequest);
 
+        $tokenRequest = Request::create('/oauth/token',  'post', $data);
+
+        $tokenResponse = app()->handle($tokenRequest);
+        $tokenString = $tokenResponse->content();
+        $tokenContent = json_decode($tokenString,  true) ;
+
+        if (!empty($tokenContent['access_token'])){
+            return $tokenResponse;
+        }
+
+        return response()->json([
+            'message' => 'Unauthenticated'
+        ]);
     }
 
     public function register(UserRegisterRequest $request)
