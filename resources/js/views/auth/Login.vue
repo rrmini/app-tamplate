@@ -57,8 +57,11 @@ export default {
             if (this.$refs.loginForm.validate()){
                 axios
                     .post('/api/login', this.user)
-                    .then((response) => {
-                        console.log(response.data)
+                    .then((response) => {this.$router.push({name: 'dashboard'});
+                        localStorage.setItem('token', response.data)
+                    })
+                    .then(() =>{
+                        this.$router.push({name: 'dashboard'});
                     })
                     .catch()
 

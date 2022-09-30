@@ -6,10 +6,14 @@
                 <span class="font-weight-light">Panel</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-btn small @click="logout" v-if="loggedIn">Logout</v-btn>
         </v-app-bar>
-        <v-content>
-            <router-view></router-view>
-        </v-content>
+        <v-main>
+            <v-container fluid>
+                <router-view></router-view>
+            </v-container>
+        </v-main>
+
 <!--        <v-main>-->
 <!--            <HelloWorld/>-->
 <!--        </v-main>-->
@@ -21,9 +25,24 @@
 import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: 'HomeView',
-  components: {
-    HelloWorld
-  }
+
+    name: 'HomeView',
+    components: {
+        HelloWorld
+    },
+    data: () => ({
+        loggedIn: false,
+    }),
+    created() {
+        if (localStorage.getItem('token')){
+            this.loggedIn = true
+        }
+    },
+    methods: {
+        logout () {
+            localStorage.removeItem('token')
+            this.$router.push({name: 'login'})
+        }
+    }
 }
 </script>
