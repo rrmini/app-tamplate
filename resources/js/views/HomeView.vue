@@ -22,26 +22,32 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+
+import { mapGetters, mapActions} from 'vuex'
 
 export default {
 
     name: 'HomeView',
-    components: {
-        HelloWorld
-    },
-    data: () => ({
-        loggedIn: false,
-    }),
+    components: {},
+    data: () => ({}),
     created() {
-        if (localStorage.getItem('token')){
-            this.loggedIn = true
-        }
+        this.checkUserState();
+    },
+    computed: {
+        ...mapGetters({
+            loggedIn: 'user/loggedIn'
+        })
     },
     methods: {
+        ...mapActions({
+            logoutUser: 'user/logoutUser',
+            checkUserState: 'user/setLoggedInState',
+        }),
         logout () {
-            localStorage.removeItem('token')
-            this.$router.push({name: 'login'})
+            this.logoutUser()
+                .then(() => {
+                    this.$router.push({name: 'login'})
+                })
         }
     }
 }

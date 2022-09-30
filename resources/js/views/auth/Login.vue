@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions } from 'vuex'
 export default {
     name: 'Login',
     data() {
@@ -53,20 +53,20 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            login: 'user/loginUser'
+        }),
         loginUser() {
             if (this.$refs.loginForm.validate()){
-                axios
-                    .post('/api/login', this.user)
-                    .then((response) => {this.$router.push({name: 'dashboard'});
-                        localStorage.setItem('token', response.data)
+                this.login(this.user)
+                    .then(() => {
+                        this.$router.push({name: 'dashboard'})
                     })
-                    .then(() =>{
-                        this.$router.push({name: 'dashboard'});
-                    })
-                    .catch()
-
             }
         },
+    },
+    created() {
+        console.log(this.$store.state)
     }
 }
 </script>
