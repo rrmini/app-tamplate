@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../axios";
 
 const state = {
     isLoggedIn: false,
@@ -40,7 +40,10 @@ const actions = {
                     resolve(response);
                 })
                 .catch((error) =>{
-                    reject(error);
+                    // reject(error);
+                    if (error.response.status === 422) {
+                        ctx.commit('setErrors', error.response.data.errors)
+                    }
                 })
         })
     },

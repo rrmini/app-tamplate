@@ -7,9 +7,7 @@
                         <div class="text-h4 pa-6">Sign Up</div>
                         <div class="text-subtitle-1 pa-6 d-flex justify-space-between">
                             <p>Already have an account?</p>
-<!--                            <v-btn variant="plain" color="secondary" @click="">Sign in-->
                                 <router-link :to="{name: 'login'}" class="text-decoration-none">Sign in</router-link>
-<!--                            </v-btn>-->
                         </div>
                         <div v-if="validationErrors" class="pa-6">
                             <v-alert
