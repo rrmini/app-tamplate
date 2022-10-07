@@ -50,6 +50,10 @@
                             </v-form>
 <!--                            <v-btn @click="loginGithub" color="info">Login with github</v-btn>-->
                         </v-card-text>
+                        <div class="text-subtitle-1 pa-6 d-flex justify-space-between">
+                            <p>Forgot your password ?</p>
+                            <router-link :to="{name: 'forgotPassword'}" class="text-decoration-none">Reset pwd</router-link>
+                        </div>
                         <v-card-actions class="pa-5">
                             <v-spacer/>
                             <v-btn
@@ -97,9 +101,10 @@ export default {
         loginUser() {
             if (this.$refs.loginForm.validate()){
                 this.login(this.user)
-                    .then(() => {
-                        this.$router.push({name: 'dashboard'})
-                    })
+                    // .then(() => {
+                    //     console.log('push')
+                    //     this.$router.push({name: 'dashboard'})
+                    // })
             }
         },
     },

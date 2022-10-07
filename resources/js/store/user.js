@@ -12,7 +12,7 @@ const actions = {
                 .get('sanctum/csrf-cookie')
                 .then(response => {
                     axios
-                        .post('/api/register', user)
+                        .post('/register', user)
                         .then(response => {
                             if (response.data) {
                                 localStorage.setItem('x-token', response.config.headers['X-XSRF-TOKEN'])
@@ -32,19 +32,27 @@ const actions = {
 
     loginUser(ctx, payload) {
         return new Promise((resolve, reject) => {
-            axios
-                .post('/api/login', payload)
-                .then((response) => {
-                    localStorage.setItem('token', payload);
-                    ctx.commit('setLoggedIn', true);
-                    resolve(response);
-                })
-                .catch((error) =>{
-                    // reject(error);
-                    if (error.response.status === 422) {
-                        ctx.commit('setErrors', error.response.data.errors)
-                    }
-                })
+            // axios.get('/sanctum/csrf-cookie').then( response => {
+                axios
+                    .post('/login', payload)
+                    .then((response) => {
+                        if (response.data) {
+                            console.log(response.data)
+                            localStorage.setItem('token', response.data.access_token)
+                            ctx.commit('setLoggedIn', true);
+                            window.location.replace("/dashboard")
+                        }
+                        // localStorage.setItem('token', payload);
+                        // ctx.commit('setLoggedIn', true);
+                        // resolve(response);
+                    })
+                    .catch((error) =>{
+                        // reject(error);
+                        if (error.response.status === 422) {
+                            ctx.commit('setErrors', error.response.data.errors)
+                        } console.log(this.errors)
+                    })
+            // })
         })
     },
 

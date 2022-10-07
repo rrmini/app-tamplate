@@ -27,9 +27,10 @@ class AuthController extends Controller
         ];
 
         $tokenRequest = Request::create('/oauth/token',  'post', $data);
+//        return app()->handle($tokenRequest);
 
         $tokenResponse = app()->handle($tokenRequest);
-        $tokenString = $tokenResponse->content();
+        $tokenString = $tokenResponse->getContent();
         $tokenContent = json_decode($tokenString,  true) ;
 
         if (!empty($tokenContent['access_token'])){
