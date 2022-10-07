@@ -4,10 +4,55 @@
             <v-row align="center" justify="center">
                 <v-col cols="12" md="4" sm="8">
                     <v-card class="elevation-12">
-                        <v-toolbar color="primary" dark flat>
-                            <v-toolbar-title>Forgot password</v-toolbar-title>
-                            <v-spacer/>
-                        </v-toolbar>
+                        <div class="text-h4 pa-6">Forgot password</div>
+                        <div class="text-subtitle-1 pa-6 d-flex justify-space-between">
+                            <p>Don't have an account?</p>
+                            <router-link :to="{name: 'register'}" class="text-decoration-none">Sign Up</router-link>
+                        </div>
+                        <div v-if="invalidCredentials" class="pa-6">
+                            <v-alert
+                                style="margin: 15px 0;"
+                                prominent
+                                type="warning"
+                                variant="outlined"
+                                density="compact"
+                                closable
+                                close-label="Close Alert"
+                                color="red"
+                            >
+                                {{ invalidCredentials }}
+                            </v-alert>
+                        </div>
+                        <div v-if="validationErrors" class="pa-6">
+                            <v-alert
+                                style="margin: 15px 0;"
+                                v-for="(value, index) in validationErrors"
+                                :key="index"
+                                prominent
+                                type="warning"
+                                variant="outlined"
+                                density="compact"
+                                closable
+                                close-label="Close Alert"
+                                color="red"
+                            >
+                                {{ value }}
+                            </v-alert>
+                        </div>
+                        <div v-if="result" class="pa-6">
+                            <v-alert
+                                style="margin: 15px 0;"
+                                prominent
+                                type="success"
+                                variant="outlined"
+                                density="compact"
+                                closable
+                                close-label="Close Alert"
+                            >
+                                Check your email
+                            </v-alert>
+                        </div>
+
                         <v-card-text>
                             <v-form ref="forgotPasswordForm">
                                 <v-text-field
@@ -22,13 +67,10 @@
                             <v-spacer/>
                             <v-btn @click="sendForgotPassword" color="primary">Send email</v-btn>
                         </v-card-actions>
-
-<!--                        <v-card-actions>-->
-<!--                            <v-spacer/>-->
-<!--                            <v-btn color="primary">-->
-<!--                                <router-link :to="{name: 'register'}">Register</router-link>-->
-<!--                            </v-btn>-->
-<!--                        </v-card-actions>-->
+                        <div v-if="result" class="text-subtitle-1 pa-6 d-flex justify-space-between">
+                            <p>Try again</p>
+                            <router-link :to="{name: 'login'}" class="text-decoration-none">Sign in</router-link>
+                        </div>
                     </v-card>
                 </v-col>
             </v-row>
@@ -37,24 +79,34 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
     name: "ForgotPassword",
     data() {
         return {
-                email: ''
+                email: '',
+                result: false
         }
+    },
+    computed: {
+        ...mapGetters({
+            validationErrors: 'user/errors',
+            invalidCredentials: 'user/invalidCredentials'
+        })
     },
     methods: {
         ...mapActions({
-            forgotPassword: 'user/forgotPassword'
+            forgotPassword: 'user/forgotPassword',
         }),
         sendForgotPassword() {
             if (this.$refs.forgotPasswordForm.validate()){
-                console.log(this.email)
+                // console.log(this.email)
                 this.forgotPassword({email: this.email})
                     .then((response) => {
-                        console.log(response.data);
+                        if (response.data){
+                            this.result = true
+                            console.log(response.data);
+                        }
                     })
             }
         },

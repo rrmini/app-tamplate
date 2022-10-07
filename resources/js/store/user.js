@@ -4,6 +4,7 @@ const state = {
     isLoggedIn: false,
     userDetails: {},
     errors: [],
+    invalidCredentials: '',
 }
 const actions = {
     registerUser(ctx, user) {
@@ -79,12 +80,15 @@ const actions = {
     forgotPassword(ctx, payload) {
         return new Promise((resolve, reject) => {
             axios
-                .post('/api/forgot-password', payload)
+                .post('/forgot-password', payload)
                 .then((response) => {
                     resolve(response);
                 })
                 .catch((error) => {
-                    reject(error);
+                    if (error.response.status === 422) {
+                        ctx.commit('setErrors', error.response.data.errors)
+                    } else if (error.response.status === 500)
+                        ctx.commit('setInvalidCredentials', error.response.data.error)
                 })
         })
     },
@@ -109,6 +113,9 @@ const mutations = {
     setErrors(state, invalidCredentials) {
         state.errors = invalidCredentials
     },
+    setInvalidCredentials (state, invalidCredentials) {
+        state.invalidCredentials = invalidCredentials
+    },
 }
 const getters = {
     loggedIn(state) {
@@ -116,6 +123,9 @@ const getters = {
     },
     errors(state) {
         return state.errors
+    },
+    invalidCredentials(state) {
+        return state.invalidCredentials
     },
 }
 
