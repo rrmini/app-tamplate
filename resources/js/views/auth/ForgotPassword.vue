@@ -56,6 +56,8 @@
                         <v-card-text>
                             <v-form ref="forgotPasswordForm">
                                 <v-text-field
+                                    variant="outlined"
+                                    clearable
                                     label="Email"
                                     name="email"
                                     type="email"

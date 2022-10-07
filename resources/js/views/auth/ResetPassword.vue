@@ -4,19 +4,28 @@
             <v-row align="center" justify="center">
                 <v-col cols="12" md="4" sm="8">
                     <v-card class="elevation-12">
-                        <v-toolbar color="primary" dark flat>
-                            <v-toolbar-title>Login form</v-toolbar-title>
-                            <v-spacer/>
-                        </v-toolbar>
+<!--                        <v-toolbar color="primary" dark flat>-->
+<!--                            <v-toolbar-title>Login form</v-toolbar-title>-->
+<!--                            <v-spacer/>-->
+<!--                        </v-toolbar>-->
+                        <div class="text-h4 pa-6">Reset password</div>
+<!--                        <div class="text-subtitle-1 pa-6 d-flex justify-space-between">-->
+<!--                            <p>Already have an account?</p>-->
+<!--                            <router-link :to="{name: 'login'}" class="text-decoration-none">Sign in</router-link>-->
+<!--                        </div>-->
                         <v-card-text>
                             <v-form  ref="resetPasswordForm">
                                 <v-text-field
+                                    variant="outlined"
+                                    clearable
                                     label="Email"
                                     name="email"
                                     type="email"
                                     v-model="user.email"
                                 />
                                 <v-text-field
+                                    variant="outlined"
+                                    clearable
                                     id="password"
                                     label="Password"
                                     name="password"
@@ -24,6 +33,8 @@
                                     v-model="user.password"
                                 />
                                 <v-text-field
+                                    variant="outlined"
+                                    clearable
                                     id="password_confirmation"
                                     label="Password Confirmation"
                                     name="password_confirmation"
@@ -40,7 +51,7 @@
                 </v-col>
             </v-row>
         </v-container>
-        <router-link :to="{name: 'login'}">Login</router-link>
+<!--        <router-link :to="{name: 'login'}">Login</router-link>-->
     </div>
 </template>
 
