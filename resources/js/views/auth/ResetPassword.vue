@@ -4,15 +4,37 @@
             <v-row align="center" justify="center">
                 <v-col cols="12" md="4" sm="8">
                     <v-card class="elevation-12">
-<!--                        <v-toolbar color="primary" dark flat>-->
-<!--                            <v-toolbar-title>Login form</v-toolbar-title>-->
-<!--                            <v-spacer/>-->
-<!--                        </v-toolbar>-->
                         <div class="text-h4 pa-6">Reset password</div>
-<!--                        <div class="text-subtitle-1 pa-6 d-flex justify-space-between">-->
-<!--                            <p>Already have an account?</p>-->
-<!--                            <router-link :to="{name: 'login'}" class="text-decoration-none">Sign in</router-link>-->
-<!--                        </div>-->
+                        <div v-if="invalidCredentials" class="pa-6">
+                            <v-alert
+                                style="margin: 15px 0;"
+                                prominent
+                                type="warning"
+                                variant="outlined"
+                                density="compact"
+                                closable
+                                close-label="Close Alert"
+                                color="red"
+                            >
+                                {{ invalidCredentials }}
+                            </v-alert>
+                        </div>
+                        <div v-if="validationErrors" class="pa-6">
+                            <v-alert
+                                style="margin: 15px 0;"
+                                v-for="(value, index) in validationErrors"
+                                :key="index"
+                                prominent
+                                type="warning"
+                                variant="outlined"
+                                density="compact"
+                                closable
+                                close-label="Close Alert"
+                                color="red"
+                            >
+                                {{ value }}
+                            </v-alert>
+                        </div>
                         <v-card-text>
                             <v-form  ref="resetPasswordForm">
                                 <v-text-field
@@ -24,6 +46,9 @@
                                     v-model="user.email"
                                 />
                                 <v-text-field
+                                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                    :type="show1 ? 'text' : 'password'"
+                                    @click:append="show1 = !show1"
                                     variant="outlined"
                                     clearable
                                     id="password"
@@ -33,6 +58,9 @@
                                     v-model="user.password"
                                 />
                                 <v-text-field
+                                    :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+                                    :type="show2 ? 'text' : 'password'"
+                                    @click:append="show2 = !show2"
                                     variant="outlined"
                                     clearable
                                     id="password_confirmation"
@@ -51,23 +79,30 @@
                 </v-col>
             </v-row>
         </v-container>
-<!--        <router-link :to="{name: 'login'}">Login</router-link>-->
     </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 
 export default {
     name: "ResetPassword",
     data () {
         return{
+            show1: false,
+            show2: false,
             user: {
                 email: '',
                 password: '',
                 password_confirmation: '',
             },
         }
+    },
+    computed: {
+        ...mapGetters({
+            validationErrors: 'user/errors',
+            invalidCredentials: 'user/invalidCredentials'
+        })
     },
     methods: {
         ...mapActions({
