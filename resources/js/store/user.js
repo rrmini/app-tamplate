@@ -33,27 +33,24 @@ const actions = {
 
     loginUser(ctx, payload) {
         return new Promise((resolve, reject) => {
-            // axios.get('/sanctum/csrf-cookie').then( response => {
-                axios
-                    .post('/login', payload)
-                    .then((response) => {
-                        if (response.data) {
-                            console.log(response.data)
-                            localStorage.setItem('token', response.data.access_token)
-                            ctx.commit('setLoggedIn', true);
-                            window.location.replace("/dashboard")
-                        }
-                        // localStorage.setItem('token', payload);
-                        // ctx.commit('setLoggedIn', true);
-                        // resolve(response);
-                    })
-                    .catch((error) =>{
-                        // reject(error);
-                        if (error.response.status === 422) {
-                            ctx.commit('setErrors', error.response.data.errors)
-                        } console.log(this.errors)
-                    })
-            // })
+            axios
+                .post('/login', payload)
+                .then((response) => {
+                    if (response.data.access_token) {
+                        // console.log(response.data)
+                        localStorage.setItem('token', response.data.access_token)
+                        ctx.commit('setLoggedIn', true);
+                        window.location.replace("/dashboard")
+                    } else {
+                        reject(response);
+                    }
+                })
+                .catch((error) =>{
+                    // reject(error);
+                    if (error.response.status === 422) {
+                        ctx.commit('setErrors', error.response.data.errors)
+                    } console.log(this.errors)
+                })
         })
     },
 
