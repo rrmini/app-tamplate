@@ -16,7 +16,7 @@ const actions = {
                         .post('/register', user)
                         .then(response => {
                             if (response.data) {
-                                localStorage.setItem('x-token', response.config.headers['X-XSRF-TOKEN'])
+                                // localStorage.setItem('x-token', response.config.headers['X-XSRF-TOKEN'])
                                 window.location.replace("/login")
                             } else {
                                 reject( response )
