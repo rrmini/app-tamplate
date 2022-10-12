@@ -10,18 +10,32 @@ const instance = axios.create({
     }
 })
 
-instance.interceptors.response.use({}, error => {
-    console.log(error.response)
+
+
+instance.interceptors.request.use(function (config){
+    const token = localStorage.getItem('token')
+    if (token) {
+        config.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+}, function (error){
+    return Promise.reject(error);
+})
+
+instance.interceptors.response.use(function (config){
+    return config
+}, error => {
     if(error.response.status ===401 || error.response.status ===419) {
-        const token = localStorage.getItem('x-token')
+        const token = localStorage.getItem('token')
         if (token) {
-            localStorage.removeItem('x-token')
+            localStorage.removeItem('token')
         }
-        window.location.replace('/user/login')
+        window.location.replace('/login')
     }
     else if (error.response.status ===422 || error.response.status ===500) {
         console.log(error.response.data)
         return Promise.reject(error);
     }
 })
+
 export default instance

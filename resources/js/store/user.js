@@ -37,7 +37,6 @@ const actions = {
                 .post('/login', payload)
                 .then((response) => {
                     if (response.data.access_token) {
-                        // console.log(response.data)
                         localStorage.setItem('token', response.data.access_token)
                         ctx.commit('setLoggedIn', true);
                         window.location.replace("/dashboard")
@@ -46,7 +45,6 @@ const actions = {
                     }
                 })
                 .catch((error) =>{
-                    // reject(error);
                     if (error.response.status === 422) {
                         ctx.commit('setErrors', error.response.data.errors)
                     } console.log(this.errors)
@@ -106,6 +104,19 @@ const actions = {
                 })
         })
     },
+
+    currentUser(ctx) {
+        return new Promise((resolve, reject) => {
+            axios.get('me')
+                .then((response) =>{
+                    console.log(response.data)
+                    ctx.commit('setUserDetails', response.data)
+                    resolve(response)
+                }).catch((error) => {
+                reject(error)
+            })
+        })
+    },
 }
 const mutations = {
     setLoggedIn(state, payload) {
@@ -117,6 +128,9 @@ const mutations = {
     setInvalidCredentials (state, invalidCredentials) {
         state.invalidCredentials = invalidCredentials
     },
+    setUserDetails(state, payload) {
+        state.userDetails = payload
+    }
 }
 const getters = {
     loggedIn(state) {
@@ -128,6 +142,9 @@ const getters = {
     invalidCredentials(state) {
         return state.invalidCredentials
     },
+    userDetails(state) {
+        return state.userDetails
+    }
 }
 
 export default {
