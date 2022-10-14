@@ -15,7 +15,15 @@ const routes = [
                 meta: {
                     middleware: [Middlewares.auth]
                 }
-            }
+            },
+            {
+                path: '/profile',
+                name: 'profile',
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/pages/Profile.vue'),
+                meta: {
+                    middleware: [Middlewares.auth]
+                }
+            },
         ]
     },
     {

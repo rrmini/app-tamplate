@@ -109,8 +109,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             axios.get('me')
                 .then((response) =>{
-                    console.log(response.data)
-                    ctx.commit('setUserDetails', response.data)
+                    ctx.commit('setUserDetails', response.data.data)
                     resolve(response)
                 }).catch((error) => {
                 reject(error)
