@@ -9,22 +9,6 @@
                             <p>Don't have an account?</p>
                             <router-link :to="{name: 'register'}" class="text-decoration-none">Sign Up</router-link>
                         </div>
-                        <div v-if="validationErrors" class="pa-6">
-                            <v-alert
-                                style="margin: 15px 0;"
-                                v-for="(value, index) in validationErrors"
-                                :key="index"
-                                prominent
-                                type="warning"
-                                variant="outlined"
-                                density="compact"
-                                closable
-                                close-label="Close Alert"
-                                color="red"
-                            >
-                                {{ value }}
-                            </v-alert>
-                        </div>
                         <v-card-text>
                             <v-form ref="loginForm">
                                 <v-text-field
@@ -96,20 +80,40 @@ export default {
     },
     methods: {
         ...mapActions({
-            login: 'user/loginUser'
+            login: 'user/loginUser',
+            addNotification: 'application/addNotification'
         }),
         loginUser() {
-            if (this.$refs.loginForm.validate()){
+            // if (this.$refs.loginForm.validate()){
                 this.login(this.user)
-                    // .then(() => {
-                    //     console.log('push')
-                    //     this.$router.push({name: 'dashboard'})
-                    // })
-            }
+                    .then(() => {
+                        this.addNotification({
+                            show: true,
+                            text: 'Welcome',
+                            color: 'success',
+                        })
+                            .then(() => {
+                                this.$router.push({name: 'dashboard'});
+                        })
+                    })
+                    .catch((error) => {
+                        console.log(error.response.data)
+                        if (error.response.data.error){
+                            this.addNotification({
+                                show: true,
+                                text: error.response.data.error,
+                                color: 'error'
+                            })
+                        } else if (error.response.data.errors){
+                               this.addNotification({
+                                   show: true,
+                                   text: error.response.data.message,
+                                   color: 'error'
+                               })
+                        }
+                    })
+            // }
         },
     },
-    created() {
-        console.log(this.$store.state)
-    }
 }
 </script>

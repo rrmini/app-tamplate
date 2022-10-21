@@ -22,18 +22,19 @@ instance.interceptors.request.use(function (config){
     return Promise.reject(error);
 })
 
-instance.interceptors.response.use(function (config){
-    return config
+instance.interceptors.response.use(function (response){
+    console.log(response)
+    return response
 }, error => {
     if(error.response.status ===401 || error.response.status ===419) {
         const token = localStorage.getItem('token')
         if (token) {
             localStorage.removeItem('token')
         }
+        return Promise.reject(error);
         window.location.replace('/login')
     }
     else if (error.response.status ===422 || error.response.status ===500) {
-        console.log(error.response.data)
         return Promise.reject(error);
     }
 })

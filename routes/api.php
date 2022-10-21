@@ -28,9 +28,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function (){
     Route::get('/me', [UsersController::class, 'user'])->name('api.me');
+    Route::post('/change-password', [UsersController::class, 'changePassword'])->name('api.change-password');
+    Route::post('/change-details', [UsersController::class, 'changeDetails'])->name('api.change-details');
 });
 
 Route::post('login', [AuthController::class, 'login'])->name('api.login');
 Route::post('register', [AuthController::class, 'register'])->name('api.register');
+
 Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('api.forgot-password');
 Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('api.reset-password');
