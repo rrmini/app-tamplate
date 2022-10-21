@@ -9,50 +9,6 @@
                             <p>Don't have an account?</p>
                             <router-link :to="{name: 'register'}" class="text-decoration-none">Sign Up</router-link>
                         </div>
-                        <div v-if="invalidCredentials" class="pa-6">
-                            <v-alert
-                                style="margin: 15px 0;"
-                                prominent
-                                type="warning"
-                                variant="outlined"
-                                density="compact"
-                                closable
-                                close-label="Close Alert"
-                                color="red"
-                            >
-                                {{ invalidCredentials }}
-                            </v-alert>
-                        </div>
-                        <div v-if="validationErrors" class="pa-6">
-                            <v-alert
-                                style="margin: 15px 0;"
-                                v-for="(value, index) in validationErrors"
-                                :key="index"
-                                prominent
-                                type="warning"
-                                variant="outlined"
-                                density="compact"
-                                closable
-                                close-label="Close Alert"
-                                color="red"
-                            >
-                                {{ value }}
-                            </v-alert>
-                        </div>
-                        <div v-if="result" class="pa-6">
-                            <v-alert
-                                style="margin: 15px 0;"
-                                prominent
-                                type="success"
-                                variant="outlined"
-                                density="compact"
-                                closable
-                                close-label="Close Alert"
-                            >
-                                Check your email
-                            </v-alert>
-                        </div>
-
                         <v-card-text>
                             <v-form ref="forgotPasswordForm">
                                 <v-text-field
@@ -69,7 +25,7 @@
                             <v-spacer/>
                             <v-btn @click="sendForgotPassword" color="primary">Send email</v-btn>
                         </v-card-actions>
-                        <div v-if="result" class="text-subtitle-1 pa-6 d-flex justify-space-between">
+                        <div  class="text-subtitle-1 pa-6 d-flex justify-space-between">
                             <p>Try again</p>
                             <router-link :to="{name: 'login'}" class="text-decoration-none">Sign in</router-link>
                         </div>
@@ -87,27 +43,38 @@ export default {
     data() {
         return {
                 email: '',
-                result: false
         }
-    },
-    computed: {
-        ...mapGetters({
-            validationErrors: 'user/errors',
-            invalidCredentials: 'user/invalidCredentials'
-        })
     },
     methods: {
         ...mapActions({
             forgotPassword: 'user/forgotPassword',
+            addNotification: 'application/addNotification'
         }),
         sendForgotPassword() {
             if (this.$refs.forgotPasswordForm.validate()){
-                // console.log(this.email)
                 this.forgotPassword({email: this.email})
                     .then((response) => {
                         if (response.data){
-                            this.result = true
-                            console.log(response.data);
+                            this.addNotification({
+                                show: true,
+                                text: response.data.message,
+                                color: 'success',
+                            })
+                        }
+                    })
+                    .catch((error) => {
+                        if (error.response.data.error){
+                            this.addNotification({
+                                show: true,
+                                text: error.response.data.error,
+                                color: 'error'
+                            })
+                        } else if (error.response.data.errors){
+                            this.addNotification({
+                                show: true,
+                                text: error.response.data.message,
+                                color: 'error'
+                            })
                         }
                     })
             }
