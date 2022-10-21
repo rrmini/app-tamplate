@@ -97,7 +97,7 @@ export default {
                         })
                     })
                     .catch((error) => {
-                        console.log(error.response.data)
+                        // console.log(error.response.data)
                         if (error.response.data.error){
                             this.addNotification({
                                 show: true,

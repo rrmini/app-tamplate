@@ -9,23 +9,6 @@
                             <p>Already have an account?</p>
                                 <router-link :to="{name: 'login'}" class="text-decoration-none">Sign in</router-link>
                         </div>
-                        <div v-if="validationErrors" class="pa-6">
-                            <v-alert
-                                style="margin: 15px 0;"
-                                v-for="(value, index) in validationErrors"
-                                :key="index"
-                                prominent
-                                type="warning"
-                                variant="outlined"
-                                density="compact"
-                                closable
-                                close-label="Close Alert"
-                                color="red"
-                            >
-                                {{ value }}
-                            </v-alert>
-                        </div>
-
                         <v-card-text>
                             <v-form ref="registerForm">
                                 <v-text-field
@@ -115,10 +98,38 @@ export default {
     methods: {
         ...mapActions({
             register: 'user/registerUser',
+            addNotification: 'application/addNotification'
         }),
         registerUser() {
             if(this.$refs.registerForm.validate()) {
                 this.register( this.user)
+                    .then((response) => {
+                        if (response.data && response.data.success){
+                            this.addNotification({
+                                show: true,
+                                text: response.data.message,
+                                color: 'success',
+                            })
+                                .then(() => {
+                                    this.$router.push({name: 'login'});
+                                })
+                        }
+                    })
+                    .catch((error) => {
+                        if (error.response.data.error){
+                            this.addNotification({
+                                show: true,
+                                text: error.response.data.error,
+                                color: 'error'
+                            })
+                        } else if (error.response.data.errors){
+                            this.addNotification({
+                                show: true,
+                                text: error.response.data.message,
+                                color: 'error'
+                            })
+                        }
+                    })
             }
         },
 

@@ -9,7 +9,7 @@ const state = {
 }
 const actions = {
     registerUser(ctx, user) {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             axios
                 .get('sanctum/csrf-cookie')
                 .then(response => {
@@ -17,16 +17,17 @@ const actions = {
                         .post('/register', user)
                         .then(response => {
                             if (response.data) {
-                                // localStorage.setItem('x-token', response.config.headers['X-XSRF-TOKEN'])
-                                window.location.replace("/login")
-                            } else {
+                                resolve(response)
+                            }
+                            else {
                                 reject( response )
                             }
                         })
                         .catch((error) => {
                             if (error.response.status === 422 ) {
                                 ctx.commit('setErrors', error.response.data.errors)
-                            } console.log(this.errors)
+                            }
+                            reject(error)
                         })
                 })
         })
