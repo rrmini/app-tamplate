@@ -118,7 +118,11 @@ const actions = {
             axios
                 .post('/change-password', payload)
                 .then((response) => {
-                    resolve(response);
+                    if (response.data.success){
+                        resolve(response);
+                    } else {
+                        reject(response);
+                    }
                 })
                 .catch((error) => {
                     console.log(error.response)
@@ -137,7 +141,11 @@ const actions = {
             axios
                 .post('/change-details', payload)
                 .then((response) => {
-                    resolve(response);
+                    if (response.data.success){
+                        resolve(response);
+                    } else {
+                        reject(response);
+                    }
                 })
                 .catch((error) => {
                     console.log(error.response)
