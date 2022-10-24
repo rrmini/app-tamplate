@@ -82,7 +82,8 @@ class ResetPasswordController extends Controller
     {
         return response()->json([
             "message" => 'Password reset succeeded',
-            "response" => $response
+            "response" => $response,
+            "success" => true,
         ], 200);
     }
 

@@ -5,36 +5,36 @@
                 <v-col cols="12" md="4" sm="8">
                     <v-card class="elevation-12">
                         <div class="text-h4 pa-6">Reset password</div>
-                        <div v-if="invalidCredentials" class="pa-6">
-                            <v-alert
-                                style="margin: 15px 0;"
-                                prominent
-                                type="warning"
-                                variant="outlined"
-                                density="compact"
-                                closable
-                                close-label="Close Alert"
-                                color="red"
-                            >
-                                {{ invalidCredentials }}
-                            </v-alert>
-                        </div>
-                        <div v-if="validationErrors" class="pa-6">
-                            <v-alert
-                                style="margin: 15px 0;"
-                                v-for="(value, index) in validationErrors"
-                                :key="index"
-                                prominent
-                                type="warning"
-                                variant="outlined"
-                                density="compact"
-                                closable
-                                close-label="Close Alert"
-                                color="red"
-                            >
-                                {{ value }}
-                            </v-alert>
-                        </div>
+<!--                        <div v-if="invalidCredentials" class="pa-6">-->
+<!--                            <v-alert-->
+<!--                                style="margin: 15px 0;"-->
+<!--                                prominent-->
+<!--                                type="warning"-->
+<!--                                variant="outlined"-->
+<!--                                density="compact"-->
+<!--                                closable-->
+<!--                                close-label="Close Alert"-->
+<!--                                color="red"-->
+<!--                            >-->
+<!--                                {{ invalidCredentials }}-->
+<!--                            </v-alert>-->
+<!--                        </div>-->
+<!--                        <div v-if="validationErrors" class="pa-6">-->
+<!--                            <v-alert-->
+<!--                                style="margin: 15px 0;"-->
+<!--                                v-for="(value, index) in validationErrors"-->
+<!--                                :key="index"-->
+<!--                                prominent-->
+<!--                                type="warning"-->
+<!--                                variant="outlined"-->
+<!--                                density="compact"-->
+<!--                                closable-->
+<!--                                close-label="Close Alert"-->
+<!--                                color="red"-->
+<!--                            >-->
+<!--                                {{ value }}-->
+<!--                            </v-alert>-->
+<!--                        </div>-->
                         <v-card-text>
                             <v-form  ref="resetPasswordForm">
                                 <v-text-field
@@ -87,8 +87,8 @@ import {mapActions, mapGetters} from 'vuex';
 
 export default {
     name: "ResetPassword",
-    data () {
-        return{
+    data() {
+        return {
             show1: false,
             show2: false,
             user: {
@@ -106,17 +106,44 @@ export default {
     },
     methods: {
         ...mapActions({
-            resetPassword: 'user/resetPassword'
+            resetPassword: 'user/resetPassword',
+            addNotification: 'application/addNotification'
         }),
         sendResetPassword() {
             if (this.$refs.resetPasswordForm.validate()) {
                 const token = this.$route.params.token;
                 this.resetPassword({...this.user, token})
-                    .then(() => {
-                        window.location.replace('/login')
+                    .then((response) => {
+                        console.log(response.data)
+                        if (response.data && response.data.success) {
+
+                            this.addNotification({
+                                show: true,
+                                text: response.data.message,
+                                color: 'success',
+                            })
+                                .then(() => {
+                                    window.location.replace('/login')
+                                })
+                        }
+                    })
+                    .catch((error) => {
+                        if (error.response.data.error){
+                            this.addNotification({
+                                show: true,
+                                text: error.response.data.error,
+                                color: 'error'
+                            })
+                        } else if (error.response.data.errors){
+                            this.addNotification({
+                                show: true,
+                                text: error.response.data.errors[0],
+                                color: 'error'
+                            })
+                        }
                     })
             }
-        },
+        }
     },
 }
 </script>
