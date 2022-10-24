@@ -5,36 +5,6 @@
                 <v-col cols="12" md="4" sm="8">
                     <v-card class="elevation-12">
                         <div class="text-h4 pa-6">Reset password</div>
-<!--                        <div v-if="invalidCredentials" class="pa-6">-->
-<!--                            <v-alert-->
-<!--                                style="margin: 15px 0;"-->
-<!--                                prominent-->
-<!--                                type="warning"-->
-<!--                                variant="outlined"-->
-<!--                                density="compact"-->
-<!--                                closable-->
-<!--                                close-label="Close Alert"-->
-<!--                                color="red"-->
-<!--                            >-->
-<!--                                {{ invalidCredentials }}-->
-<!--                            </v-alert>-->
-<!--                        </div>-->
-<!--                        <div v-if="validationErrors" class="pa-6">-->
-<!--                            <v-alert-->
-<!--                                style="margin: 15px 0;"-->
-<!--                                v-for="(value, index) in validationErrors"-->
-<!--                                :key="index"-->
-<!--                                prominent-->
-<!--                                type="warning"-->
-<!--                                variant="outlined"-->
-<!--                                density="compact"-->
-<!--                                closable-->
-<!--                                close-label="Close Alert"-->
-<!--                                color="red"-->
-<!--                            >-->
-<!--                                {{ value }}-->
-<!--                            </v-alert>-->
-<!--                        </div>-->
                         <v-card-text>
                             <v-form  ref="resetPasswordForm">
                                 <v-text-field

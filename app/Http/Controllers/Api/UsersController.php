@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\User\UpdateUserDetailsAction;
+use App\Actions\User\UpdateUserPasswordAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -15,20 +17,18 @@ class UsersController extends Controller
         return new UserResource(Auth::user());
     }
 
-    public function changePassword()
+    public function changePassword(Request $request, UpdateUserPasswordAction $updateUserPasswordAction)
     {
-        return response()->json([
-            "status" => true
-        ]);
+        if ($updateUserPasswordAction->run($request->all(), Auth::id())) {
+            return response()->json(["success" => true]);
+        }
+
+        return response()->json(["success" => false]);
     }
 
-    public function changeDetails(Request $request)
+    public function changeDetails(Request $request, UpdateUserDetailsAction $updateUserDetailsAction)
     {
-//        dd($request->name);
-        $user = User::findOrFail(Auth::id());
-        $user->name = $request->name;
-        $user->email = $request->email;
-        if ($user->save()){
+        if ($updateUserDetailsAction->run($request->all(), Auth::id())){
             return response()->json(["success" => true]);
         }
         return response()->json(["success" => false]);

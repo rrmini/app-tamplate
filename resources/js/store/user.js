@@ -124,8 +124,10 @@ const actions = {
                     console.log(error.response)
                     if (error.response.status === 422) {
                         ctx.commit('setErrors', error.response.data.errors)
-                    } else if (error.response.status === 500)
+                    } else if (error.response.status === 500) {
                         ctx.commit('setInvalidCredentials', error.response.data.error)
+                    }
+                    reject(error)
                 })
         })
     },

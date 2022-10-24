@@ -62,9 +62,7 @@
                                                                 :type="show ? 'text' : 'password'"
                                                                 variant="outlined"
                                                                 clearable
-                                                                id="password"
                                                                 label="Password"
-                                                                name="password"
                                                                 v-model="user.oldPassword"
                                                                 @click:append="show = !show"
                                                             />
@@ -75,9 +73,7 @@
                                                                 :type="show1 ? 'text' : 'password'"
                                                                 variant="outlined"
                                                                 clearable
-                                                                id="newPassword"
                                                                 label="New Password"
-                                                                name="newPassword"
                                                                 v-model="user.newPassword"
                                                                 @click:append="show1 = !show1"
                                                             />
@@ -88,9 +84,7 @@
                                                                 :type="show2 ? 'text' : 'password'"
                                                                 variant="outlined"
                                                                 clearable
-                                                                id="password_confirmation"
                                                                 label="Password Confirmation"
-                                                                name="password_confirmation"
                                                                 v-model="user.newPasswordConfirmation"
                                                                 @click:append="show2 = !show2"
                                                             />
@@ -194,7 +188,8 @@ export default {
         ...mapActions({
             currentUser: 'user/currentUser',
             updateDetails: "user/updateDetails",
-            changeUserPassword: "user/changePassword"
+            changeUserPassword: "user/changePassword",
+            addNotification: "application/addNotification"
         }),
         changeDetails() {
             if (!this.$refs.changeDetailsForm.validate()) {
@@ -202,7 +197,16 @@ export default {
             }
 
             this.updateDetails(this.userDetails)
-                .then()
+                .then((response) => {
+                    // console.log(response.data)
+                    if (response.data.success){
+                        this.addNotification({
+                            show: true,
+                            text: 'Details changed',
+                            color: 'success',
+                        })
+                    }
+                })
                 .catch()
 
             this.overlay = false;
@@ -211,7 +215,32 @@ export default {
             if (!this.$refs.changePasswordForm.validate()) {
                 return false;
             }
-            this.changeUserPassword()
+            this.changeUserPassword(this.user)
+                .then( (response) => {
+                    // console.log(response.data)
+                    if (response.data.success){
+                        this.addNotification({
+                            show: true,
+                            text: 'Password changed',
+                            color: 'success',
+                        })
+                    }
+                })
+                .catch((error) => {
+                    if (error.response.data.error){
+                        this.addNotification({
+                            show: true,
+                            text: error.response.data.error,
+                            color: 'error'
+                        })
+                    } else if (error.response.data.errors){
+                        this.addNotification({
+                            show: true,
+                            text: error.response.data.errors[0],
+                            color: 'error'
+                        })
+                    }
+                })
             console.log('changePassword')
         },
         cancel() {
