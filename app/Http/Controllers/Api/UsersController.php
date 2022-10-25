@@ -6,9 +6,8 @@ use App\Actions\User\UpdateUserDetailsAction;
 use App\Actions\User\UpdateUserPasswordAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeDetailsRequest;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Resources\UserResource;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
@@ -18,7 +17,7 @@ class UsersController extends Controller
         return new UserResource(Auth::user());
     }
 
-    public function changePassword(Request $request, UpdateUserPasswordAction $updateUserPasswordAction)
+    public function changePassword(ChangePasswordRequest $request, UpdateUserPasswordAction $updateUserPasswordAction)
     {
         if ($updateUserPasswordAction->run($request->all(), Auth::id())) {
             return response()->json(["success" => true]);

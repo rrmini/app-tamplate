@@ -102,7 +102,6 @@ const actions = {
                     resolve(response);
                 })
                 .catch((error) => {
-                    // console.log(error.response)
                     if (error.response.status === 422) {
                         ctx.commit('setErrors', error.response.data.errors)
                     } else if (error.response.status === 500) {
@@ -125,7 +124,6 @@ const actions = {
                     }
                 })
                 .catch((error) => {
-                    console.log(error.response)
                     if (error.response.status === 422) {
                         ctx.commit('setErrors', error.response.data.errors)
                     } else if (error.response.status === 500) {
@@ -148,7 +146,6 @@ const actions = {
                     }
                 })
                 .catch((error) => {
-                    console.log(error.response)
                     if (error.response.status === 422) {
                         ctx.commit('setErrors', error.response.data.errors)
                     } else if (error.response.status === 500) {

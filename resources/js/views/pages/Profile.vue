@@ -63,7 +63,7 @@
                                                                 :type="show ? 'text' : 'password'"
                                                                 variant="outlined"
                                                                 clearable
-                                                                label="Password"
+                                                                label="Old Password"
                                                                 v-model="user.oldPassword"
                                                                 @click:append="show = !show"
                                                             />
@@ -87,7 +87,7 @@
                                                                 variant="outlined"
                                                                 clearable
                                                                 label="Password Confirmation"
-                                                                v-model="user.newPasswordConfirmation"
+                                                                v-model="user.newPassword_confirmation"
                                                                 @click:append="show2 = !show2"
                                                                 :rules="[...requiredRules, ...passwordRules, newPasswordValidator]"
                                                             />
@@ -177,7 +177,7 @@ export default {
                 // email: '',
                 oldPassword: '',
                 newPassword: '',
-                newPasswordConfirmation: '',
+                newPassword_confirmation: '',
             },
             tab: null,
             show: false,
@@ -214,7 +214,6 @@ export default {
                     }
                 })
                 .catch((error) => {
-                    // console.log(error)
                     if (error.response.data.error){
                         this.addNotification({
                             show: true,
@@ -239,7 +238,6 @@ export default {
             }
             this.changeUserPassword(this.user)
                 .then( (response) => {
-                    // console.log(response.data)
                     if (response.data.success){
                         this.addNotification({
                             show: true,
@@ -249,29 +247,27 @@ export default {
                     }
                 })
                 .catch((error) => {
-                    console.log(error.data)
-                    if (error.response.data.error){
+                    if (!error.data.success){
                         this.addNotification({
                             show: true,
-                            text: error.response.data.error,
+                            text: 'Password not changed',
                             color: 'error'
                         })
                     } else if (error.response.data.errors){
                         this.addNotification({
                             show: true,
-                            text: error.response.data.errors[0],
+                            text: error.response.data.message,
                             color: 'error'
                         })
                     }
                 })
-            console.log('changePassword')
         },
         cancel() {
             this.currentUser();
             this.overlay = false;
         },
         newPasswordValidator() {
-            return (this.user.newPasswordConfirmation === this.user.newPassword) || 'New password is not confirmed';
+            return (this.user.newPassword_confirmation === this.user.newPassword) || 'New password is not confirmed';
         }
     },
     created() {

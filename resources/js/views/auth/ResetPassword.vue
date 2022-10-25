@@ -89,7 +89,6 @@ export default {
                 const token = this.$route.params.token;
                 this.resetPassword({...this.user, token})
                     .then((response) => {
-                        console.log(response.data)
                         if (response.data && response.data.success) {
 
                             this.addNotification({
