@@ -18,6 +18,7 @@
                                     name="email"
                                     type="email"
                                     v-model="user.email"
+                                    :rules="[...requiredRules, ...emailRules]"
                                 />
                                 <v-text-field
                                     :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
@@ -30,6 +31,7 @@
                                     name="password"
                                     type="password"
                                     v-model="user.password"
+                                    :rules="[...requiredRules, ...passwordRules]"
                                 />
                             </v-form>
 <!--                            <v-btn @click="loginGithub" color="info">Login with github</v-btn>-->
@@ -62,8 +64,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import ValidationMixin from '../../../mixins/validationMixin'
+
 export default {
     name: 'Login',
+    mixins: [ValidationMixin],
     data() {
         return {
             user: {
@@ -84,7 +89,7 @@ export default {
             addNotification: 'application/addNotification'
         }),
         loginUser() {
-            // if (this.$refs.loginForm.validate()){
+            if (this.$refs.loginForm.validate()){
                 this.login(this.user)
                     .then(() => {
                         this.addNotification({
@@ -97,7 +102,6 @@ export default {
                         })
                     })
                     .catch((error) => {
-                        // console.log(error.response.data)
                         if (error.response.data.error){
                             this.addNotification({
                                 show: true,
@@ -112,7 +116,7 @@ export default {
                                })
                         }
                     })
-            // }
+            }
         },
     },
 }

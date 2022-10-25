@@ -14,6 +14,7 @@
                                     name="email"
                                     type="email"
                                     v-model="user.email"
+                                    :rules="[...requiredRules, ...emailRules]"
                                 />
                                 <v-text-field
                                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -26,6 +27,7 @@
                                     name="password"
                                     type="password"
                                     v-model="user.password"
+                                    :rules="[...requiredRules, ...passwordRules]"
                                 />
                                 <v-text-field
                                     :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -38,6 +40,7 @@
                                     name="password_confirmation"
                                     type="password"
                                     v-model="user.password_confirmation"
+                                    :rules="[...requiredRules, ...passwordRules, newPasswordValidator]"
                                 />
                             </v-form>
                         </v-card-text>
@@ -54,9 +57,11 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
+import ValidationMixin from "../../../mixins/validationMixin";
 
 export default {
     name: "ResetPassword",
+    mixins: [ValidationMixin],
     data() {
         return {
             show1: false,
@@ -113,7 +118,10 @@ export default {
                         }
                     })
             }
-        }
+        },
+        newPasswordValidator() {
+            return (this.user.newPasswordConfirmation === this.user.newPassword) || 'New password is not confirmed';
+        },
     },
 }
 </script>

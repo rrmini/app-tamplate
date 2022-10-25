@@ -12,6 +12,7 @@
                         <v-card-text>
                             <v-form ref="forgotPasswordForm">
                                 <v-text-field
+                                    :rules="[...requiredRules, ...emailRules]"
                                     variant="outlined"
                                     clearable
                                     label="Email"
@@ -37,9 +38,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
+import ValidationMixin from '../../../mixins/validationMixin'
+
 export default {
     name: "ForgotPassword",
+    mixins: [ValidationMixin],
     data() {
         return {
                 email: '',

@@ -58,6 +58,7 @@
                                                     <v-row>
                                                         <v-col cols="12" >
                                                             <v-text-field
+                                                                :rules="[...requiredRules, ...passwordRules]"
                                                                 :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                                                                 :type="show ? 'text' : 'password'"
                                                                 variant="outlined"
@@ -76,6 +77,7 @@
                                                                 label="New Password"
                                                                 v-model="user.newPassword"
                                                                 @click:append="show1 = !show1"
+                                                                :rules="[...requiredRules, ...passwordRules]"
                                                             />
                                                         </v-col>
                                                         <v-col cols="12" md="6">
@@ -87,6 +89,7 @@
                                                                 label="Password Confirmation"
                                                                 v-model="user.newPasswordConfirmation"
                                                                 @click:append="show2 = !show2"
+                                                                :rules="[...requiredRules, ...passwordRules, newPasswordValidator]"
                                                             />
                                                         </v-col>
                                                         <v-col cols="12" >
@@ -132,6 +135,7 @@
                                     variant="outlined"
                                     label="Name"
                                     type="text"
+                                    :rules="requiredRules"
                                 >
                                 </v-text-field>
                             </v-col>
@@ -143,6 +147,7 @@
                                     label="Email"
                                     name="email"
                                     type="email"
+                                    :rules="[...requiredRules, ...emailRules]"
                                 >
                                 </v-text-field>
                             </v-col>
@@ -160,9 +165,11 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import ValidationMixin from '../../../mixins/validationMixin'
 
 export default {
     name: "Profile",
+    mixins: [ValidationMixin],
     data() {
         return {
             user: {
@@ -198,7 +205,6 @@ export default {
 
             this.updateDetails(this.userDetails)
                 .then((response) => {
-                    // console.log(response.data)
                     if (response.data.success){
                         this.addNotification({
                             show: true,
@@ -248,6 +254,9 @@ export default {
             this.currentUser();
             this.overlay = false;
         },
+        newPasswordValidator() {
+            return (this.user.newPasswordConfirmation === this.user.newPassword) || 'New password is not confirmed';
+        }
     },
     created() {
         this.currentUser();

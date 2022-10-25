@@ -18,6 +18,7 @@
                                     name="name"
                                     type="text"
                                     v-model="user.name"
+                                    :rules="requiredRules"
                                 />
                                 <v-text-field
                                     variant="outlined"
@@ -26,6 +27,7 @@
                                     name="email"
                                     type="email"
                                     v-model="user.email"
+                                    :rules="[...requiredRules, ...emailRules]"
                                 />
                                 <v-text-field
                                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -37,6 +39,7 @@
                                     name="password"
                                     v-model="user.password"
                                     @click:append="show1 = !show1"
+                                    :rules="[...requiredRules, ...passwordRules]"
                                 />
                                 <v-text-field
                                     :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -48,6 +51,7 @@
                                     name="password_confirmation"
                                     v-model="user.password_confirmation"
                                     @click:append="show2 = !show2"
+                                    :rules="[...requiredRules, ...passwordRules, newPasswordValidator]"
                                 />
                             </v-form>
                         </v-card-text>
@@ -75,9 +79,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import ValidationMixin from '../../../mixins/validationMixin'
 
 export default {
     name: "Register",
+    mixins: [ValidationMixin],
     data() {
         return {
             show1: false,
@@ -132,7 +138,9 @@ export default {
                     })
             }
         },
-
+        newPasswordValidator() {
+            return (this.user.newPasswordConfirmation === this.user.newPassword) || 'New password is not confirmed';
+        },
     },
 }
 </script>
