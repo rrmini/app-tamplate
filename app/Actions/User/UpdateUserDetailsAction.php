@@ -10,7 +10,7 @@ class UpdateUserDetailsAction
     {
         $user = User::findOrFail($userId);
         $user->name = $request['name'];
-        $user->email = $request['email'];
+//        $user->email = $request['email'];
         return $user->save();
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Actions\User\UpdateUserDetailsAction;
 use App\Actions\User\UpdateUserPasswordAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangeDetailsRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class UsersController extends Controller
         return response()->json(["success" => false]);
     }
 
-    public function changeDetails(Request $request, UpdateUserDetailsAction $updateUserDetailsAction)
+    public function changeDetails(ChangeDetailsRequest $request, UpdateUserDetailsAction $updateUserDetailsAction)
     {
         if ($updateUserDetailsAction->run($request->all(), Auth::id())){
             return response()->json(["success" => true]);

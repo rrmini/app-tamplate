@@ -139,18 +139,18 @@
                                 >
                                 </v-text-field>
                             </v-col>
-                            <v-col cols="12" md="6">
-                                <v-text-field
-                                    v-model="userDetails.email"
-                                    density="comfortable"
-                                    variant="outlined"
-                                    label="Email"
-                                    name="email"
-                                    type="email"
-                                    :rules="[...requiredRules, ...emailRules]"
-                                >
-                                </v-text-field>
-                            </v-col>
+<!--                            <v-col cols="12" md="6">-->
+<!--                                <v-text-field-->
+<!--                                    v-model="userDetails.email"-->
+<!--                                    density="comfortable"-->
+<!--                                    variant="outlined"-->
+<!--                                    label="Email"-->
+<!--                                    name="email"-->
+<!--                                    type="email"-->
+<!--                                    :rules="[...requiredRules, ...emailRules]"-->
+<!--                                >-->
+<!--                                </v-text-field>-->
+<!--                            </v-col>-->
                             <v-col cols="12"  class="d-flex flex-wrap justify-center" style="gap: 1rem;">
                                 <v-btn @click="changeDetails" color="primary" >Save</v-btn>
                                 <v-btn @click="cancel" color="grey" type="button">Cancel</v-btn>
@@ -174,7 +174,7 @@ export default {
         return {
             user: {
                 name: '',
-                email: '',
+                // email: '',
                 oldPassword: '',
                 newPassword: '',
                 newPasswordConfirmation: '',
@@ -213,7 +213,23 @@ export default {
                         })
                     }
                 })
-                .catch()
+                .catch((error) => {
+                    // console.log(error)
+                    if (error.response.data.error){
+                        this.addNotification({
+                            show: true,
+                            text: error.response.data.error,
+                            color: 'error'
+                        })
+                    } else if (error.response.data.errors){
+                        this.addNotification({
+                            show: true,
+                            text: error.response.data.message,
+                            color: 'error'
+                        })
+                    }
+                    this.currentUser();
+                })
 
             this.overlay = false;
         },
