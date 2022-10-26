@@ -11,11 +11,18 @@ const routes = [
         name: 'main',
         component: App,
         children: [
-
             {
                 path: '/',
                 component: AuthLayout,
                 children: [
+                    {
+                        path: 'auth/github/callback',
+                        name: 'loginGithub',
+                        component: () => import(/* webpackChunkName: "login" */ '../views/auth/LoginGithub.vue'),
+                        meta: {
+                            middleware: [Middlewares.guest]
+                        }
+                    },
                     {
                         path: '/login',
                         name: 'login',

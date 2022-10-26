@@ -51,7 +51,7 @@
                         </v-card-actions>
                         <div class="text-center mt-6">
                             <div class="d-flex align-center justify-center gap">
-                                <v-btn class="bg-secondary mx-3"  icon="mdi-github" ></v-btn>
+                                <v-btn @click="loginGithub" class="bg-secondary mx-3"  icon="mdi-github" ></v-btn>
                                 <v-btn class="bg-secondary mx-3"  icon="mdi-vk" ></v-btn>
                             </div>
                         </div>
@@ -86,7 +86,8 @@ export default {
     methods: {
         ...mapActions({
             login: 'user/loginUser',
-            addNotification: 'application/addNotification'
+            addNotification: 'application/addNotification',
+            loginGithubAction: 'user/loginGithub',
         }),
         loginUser() {
             if (this.$refs.loginForm.validate()){
@@ -117,6 +118,17 @@ export default {
                         }
                     })
             }
+        },
+        loginGithub(){
+            this.loginGithubAction()
+                .then((response) => {
+                    if (response.data.url){
+                        window.location.href = response.data.url
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
         },
     },
 }

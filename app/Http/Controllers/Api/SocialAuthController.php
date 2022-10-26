@@ -14,7 +14,11 @@ class SocialAuthController extends Controller
 {
     public function redirectToProvider($provider)
     {
-        return Socialite::driver($provider)->stateless()->redirect();
+        $url = Socialite::driver($provider)->stateless()->redirect()->getTargetUrl();
+
+        return response()->json([
+            "url" => $url
+        ]);
     }
 
     public function handleProviderCallback($provider, RegisterAction $registerAction)

@@ -56,6 +56,40 @@ const actions = {
         })
     },
 
+    loginGithub() {
+        return new Promise((resolve, reject) => {
+            axios
+                .get('auth/github/redirect')
+                .then((response) => {
+                    resolve(response);
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+        })
+    },
+
+    loginGithubCallback(ctx, payload) {
+        return new Promise((resolve, reject) => {
+            axios
+                .get('auth/github/callback', {
+                    params: payload
+                })
+                .then((response) => {
+                    if (response.data.access_token) {
+                        localStorage.setItem('token', response.data.access_token);
+                        ctx.commit('setLoggedIn', true);
+                        ctx.dispatch('currentUser').then(() => resolve(response));
+                    } else {
+                        reject(response);
+                    }
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+        })
+    },
+
     logoutUser (ctx) {
         return new Promise((resolve) => {
             localStorage.removeItem('token');
