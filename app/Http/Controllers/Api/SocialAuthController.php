@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Auth\RegisterAction;
 use App\Http\Controllers\Controller;
+use App\Models\SocialAccount;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
@@ -13,9 +17,50 @@ class SocialAuthController extends Controller
         return Socialite::driver($provider)->stateless()->redirect();
     }
 
-    public function handleProviderCallback($provider)
+    public function handleProviderCallback($provider, RegisterAction $registerAction)
     {
         $user = Socialite::driver($provider)->stateless()->user();
-        dd($user);
+        if (!$user->token){
+            return response()->json([
+                "success" => false,
+                "message" => "Failed to login"
+            ], 401);
+        }
+
+        $appUser = User::whereEmail($user->email)->first();
+
+        if (!$appUser) {
+            // create user and add the provider
+            $appUser = $registerAction->run([
+                'name' => $user->name,
+                'password' => Str::random(7),
+                'email' => $user->email
+            ]);
+
+            $socialAccount = SocialAccount::create([
+                'provider' => $provider,
+                'provider_user_id' => $user->id,
+                'user_id' => $appUser->id
+            ]);
+        } else {
+            // means that we have already this user
+            $socialAccount = $appUser->socialAccounts()->where('provider', $provider)->first();
+
+            if (!$socialAccount) {
+                // create social account
+                $socialAccount = SocialAccount::create([
+                    'provider' => $provider,
+                    'provider_user_id' => $user->id,
+                    'user_id' => $appUser->id
+                ]);
+            }
+        }
+
+        // login our user and get the token
+        $passportToken = $appUser->createToken('Login token')->accessToken;
+
+        return response()->json([
+            'access_token' => $passportToken
+        ]);
     }
 }

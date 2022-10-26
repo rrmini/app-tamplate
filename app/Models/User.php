@@ -53,8 +53,11 @@ class User extends Authenticatable
      */
     public function sendPasswordResetNotification($token)
     {
-//        $url = 'https://example.com/reset-password?token='.$token;
-
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    public function socialAccounts()
+    {
+        return $this->hasMany(SocialAccount::class);
     }
 }
