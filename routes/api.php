@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\ResetPasswordController;
 use App\Http\Controllers\Api\SocialAuthController;
 use App\Http\Controllers\Api\UsersController;
+use App\Http\Controllers\Api\VerificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +37,7 @@ Route::post('login', [AuthController::class, 'login'])->name('api.login');
 Route::post('register', [AuthController::class, 'register'])->name('api.register');
 Route::get('/auth/{provider}/redirect',[SocialAuthController::class, 'redirectToProvider'])->name('api.social.redirect');
 Route::get('/auth/{provider}/callback',[SocialAuthController::class, 'handleProviderCallback'])->name('api.social.callback');
+Route::get('/email-verification',[VerificationController::class, 'verify'])->name('verification.verify');
 
 
 Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('api.forgot-password');

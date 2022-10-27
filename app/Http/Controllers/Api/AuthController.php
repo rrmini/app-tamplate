@@ -19,6 +19,13 @@ class AuthController extends Controller
             return $passportRequest["response"];
         }
 
+        if (empty($tokenContent)) {
+            return response()->json([
+                'message' => 'Email is not verified',
+                'error' => 'Email is not verified'
+            ], 401);
+        }
+
         return response()->json([
             'error' => 'Invalid credentials',
             'message' => 'Unauthenticated'

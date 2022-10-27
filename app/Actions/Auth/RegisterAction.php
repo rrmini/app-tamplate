@@ -15,7 +15,7 @@ class RegisterAction
             'password' => Hash::make($request['password']),
         ]);
 
-//        $user->sendEmailVerificationNotification();
+        $user->sendEmailVerificationNotification();
 
         return $user;
     }
