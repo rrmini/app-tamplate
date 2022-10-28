@@ -201,6 +201,35 @@ const actions = {
             })
         })
     },
+
+    verifyEmail(ctx, payload) {
+
+        return new Promise((resolve, reject) => {
+            axios
+                .get('email-verification', {
+                    params: payload
+                })
+                .then((response) => {
+                    resolve(response);
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+        })
+    },
+
+    resendEmailVerificationNotification(ctx, payload){
+        return new Promise((resolve, reject) => {
+            axios
+                .post('email-resend', payload)
+                .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    },
 }
 const mutations = {
     setLoggedIn(state, payload) {

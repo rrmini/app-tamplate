@@ -55,6 +55,14 @@ const routes = [
                             middleware: [Middlewares.guest]
                         }
                     },
+                    {
+                        path: '/verify-email',
+                        name: 'verifyEmail',
+                        component: () => import(/* webpackChunkName: "verifyEmail" */ '../views/auth/VerifyEmail.vue'),
+                        meta: {
+                            // middleware: [Middlewares.guest]
+                        }
+                    },
                 ],
             },
 

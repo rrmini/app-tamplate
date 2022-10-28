@@ -19,6 +19,12 @@
                         </v-list>
                     </v-card-text>
                     <v-card-text class="d-flex justify-center">
+                        <v-btn
+                            v-if="!userDetails.email_verified"
+                            class="mr-2"
+                            color="warning"
+                            @click="resendEmail"
+                        >Email verification</v-btn>
                         <v-btn id="overlay" color="secondary">EDIt</v-btn>
                     </v-card-text>
                 </v-card>
@@ -174,7 +180,7 @@ export default {
         return {
             user: {
                 name: '',
-                // email: '',
+                email: '',
                 oldPassword: '',
                 newPassword: '',
                 newPassword_confirmation: '',
@@ -196,7 +202,8 @@ export default {
             currentUser: 'user/currentUser',
             updateDetails: "user/updateDetails",
             changeUserPassword: "user/changePassword",
-            addNotification: "application/addNotification"
+            addNotification: "application/addNotification",
+            resendEmailVerificationNotification: "user/resendEmailVerificationNotification"
         }),
         changeDetails() {
             if (!this.$refs.changeDetailsForm.validate()) {
@@ -268,7 +275,22 @@ export default {
         },
         newPasswordValidator() {
             return (this.user.newPassword_confirmation === this.user.newPassword) || 'New password is not confirmed';
-        }
+        },
+        resendEmail(){
+            this.resendEmailVerificationNotification( {"email" : this.userDetails.email})
+                .then((response) => {
+                    if (response.data.success){
+                        this.addNotification({
+                            show: true,
+                            text: response.data.message,
+                            color: 'success',
+                        })
+                    }
+                })
+                .catch((error) =>{
+                    console.log(error)
+                })
+        },
     },
     created() {
         this.currentUser();

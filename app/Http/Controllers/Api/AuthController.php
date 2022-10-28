@@ -15,16 +15,18 @@ class AuthController extends Controller
         $passportRequest = $loginAction->run($request->all()) ;
         $tokenContent = $passportRequest["content"];
 
+//        dd($passportRequest);
+
         if (!empty($tokenContent['access_token'])){
             return $passportRequest["response"];
         }
 
-        if (empty($tokenContent)) {
-            return response()->json([
-                'message' => 'Email is not verified',
-                'error' => 'Email is not verified'
-            ], 401);
-        }
+//        if (empty($tokenContent)) {
+//            return response()->json([
+//                'message' => 'Email is not verified',
+//                'error' => 'Email is not verified'
+//            ], 401);
+//        }
 
         return response()->json([
             'error' => 'Invalid credentials',

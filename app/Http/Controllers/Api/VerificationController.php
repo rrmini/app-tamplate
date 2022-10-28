@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 
 class VerificationController extends Controller
@@ -42,6 +43,7 @@ class VerificationController extends Controller
     }
 
     public function resendVerificationEmail (Request $request) {
+//        dd($request);
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {

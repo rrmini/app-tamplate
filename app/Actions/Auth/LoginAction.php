@@ -10,7 +10,7 @@ class LoginAction
 {
     public function run($request)
     {
-        $user = User::where('email', $request['email'])->where('email_verified_at', '<>', NULL)->first();
+        $user = User::where('email', $request['email'])->first(); //->where('email_verified_at', '<>', NULL)
 
         if (!$user) {
             return [
@@ -36,6 +36,7 @@ class LoginAction
         $contentString = $tokenResponse->getContent();
 
         return [
+            "verified" => $user['email_verified_at'],
             "response" => $tokenResponse,
             "content" => json_decode($contentString, true)
         ];
